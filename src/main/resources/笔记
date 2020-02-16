@@ -1,0 +1,44 @@
+1.读取配置文件：用的就是解析Xml文件的技术
+
+2.mybatis是支持自己写dao层的，但是没有必要。
+  mybatis做的事情：
+  第一个创建代理对象，第二个在代理对象中调用方法。
+
+3.相同的注解如果和配置文件一同出现的话会报错，即使在Sql***.xml的配置文件中注释掉一个也会出错。
+  我也不清楚，但是我把Sql***.xml配置文件的配置文件方法注释掉他报错了，不知道注释到注解留下
+  配置文件方法会不会报错
+  在之后的学习，老师讲解了一下解析xml的源码，它的运行是先判定有没有resource来确定某个mapper.xml
+  如果没有才用注解方式判定，我也不知道为什么会报错是因为重复吗，但是我把它注释了啊。
+
+4.mybatis运行过程：基于配置文件执行，利用java反射机制返回想要的结果集
+ 查询的findAll机理：
+  1.根据配置文件的信息创建Connection对象 注册驱动获取连接
+  2.获取与处理的对象PreparedSatement 需要SQL语句
+  3.执行查询 ResultSet
+  4.结果返回
+  配置文件中的Mapper对象包含：Sql语句 domainClassPath（封装类的全限定名）
+
+5. class： Resources SqlSessionFactoryBuilder
+   接口： SqlSessionFactory  SqlSession
+   这四个的作用看源码注释
+
+6.xml方式与注解方式的区别优劣：
+   简单用注解
+   复杂用xml
+   xml可以利用自定义注解,通过反射,拼出SQL语句，而注解方式怎么动态呢？
+7. 进行add和update必须进行session.commit();
+          session.commit();
+
+8.如果Bean层不对应数据库的话
+   第一个解决方案1.起别名  username as userName  运行快
+   第二个解决方案 <resultMap>的配置   只用写一遍对于开发要优势
+   二者各有利弊，追求执行效率第一种和数据库和实体类一一对应
+   追求开发爽就是第二种 写一遍可扩展性好
+
+9.<properties resource="">
+    用于配置数据库的连接信息 resource 写类路径下的文件必须保存在类路径下
+    url写协议主机端URI  windows文件夹下就是绝对路径-->
+
+
+总结：mybatis通过解析xml文件获取各种属性包括driver，url，账号密码，mappers的信息
+     和mapper信息，利用java反射机制生成工厂来生成代理对象来工作

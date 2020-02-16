@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+    <!-- 这里写配置内容 配置环境-->
+
+    <!--  用于配置数据库的连接信息 resource 写类路径下的文件必须保存在类路径下   url写协议主机端URI  windows文件夹下就是绝对路径-->
+  <!--  <properties resource="">-->
+
+        <!--
+        <property name="driver" value="com.mysql.cj.jdbc.Driver"/>
+        <property name="url" value="jdbc:mysql://localhost:3306/runmybatis?serverTimezone=UTC"/>
+        <property name="username" value="root"/>
+        <property name="password" value="123456"/>
+         -->
+ <!--   </properties>-->
+    <!--使用typeAliases配置别名 他只能配置domain类中别名 -->
+    <typeAliases>
+      <!--  <typeAlias type="bean.User" alias="user"></typeAlias>-->
+       <!-- 用于指定要配置别名的包，当指定后类名就是，不管大小写-->
+        <package name="bean.User"/>
+    </typeAliases>
+    <environments default="mysql">
+        <!--   配置mysql的环境     -->
+        <environment id="mysql">
+            <!--   配置事务的类型          -->
+            <transactionManager type="JDBC"></transactionManager>
+            <!-- 配置数据源连接池           -->
+            <dataSource type="POOLED">
+                <!--用于创建  Collection对象   value=${driver}" -->
+                <property name="driver" value="com.mysql.cj.jdbc.Driver"/>
+                <property name="url" value="jdbc:mysql://localhost:3306/runmybatis?serverTimezone=UTC"/>
+                <property name="username" value="root"/>
+                <property name="password" value="123456"/>
+            </dataSource>
+        </environment>
+    </environments>
+  <!-- 俩种配置方法，一个注解一个映射配置文件-->
+    <!-- 指定映射配置文件的位置，映射配置文件的是每个dao独立的配置文件 -->
+    <!--那个放在了target中配置文件版-->
+    <!--  有了它就有了映射配置信息-->
+      <mappers>
+          <!-- 指定dao中的接口的包 写了他就不用写mapper了 作用同下-->
+          <!--<package name="dao.IUserDao"/>-->
+         <mapper resource="dao/IUserDao.xml" />
+      </mappers>
+
+    <!--注解来配置 使用class属性制定被注解的dao全限定类名-->
+   <!-- <mappers>
+        <mapper class="dao.IUserDao" ></mapper>
+    </mappers>-->
+</configuration>

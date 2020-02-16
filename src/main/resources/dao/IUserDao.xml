@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="dao.IUserDao">
+    <!-- 重点之一-->
+    <!--    配置数据库的列名与实体类中国属性名的对应关系
+    <resultMap id="userMap" type="bean.User">
+       主键的配置
+       <id property="" column="">
+        非主键的配置
+        <result property=""column=""></result>
+    </resultMap> -->
+
+            <!-- SQL语句
+                  配置查找
+                  提供Sql语句 获取'PreparedSatement'
+                  和返回的类型3
+                  -->
+    <!--查找所有-->
+   <select resultType="bean.User" id="findAll">
+      select * from user
+   </select>
+
+    <!--保存用户 插入   parameterType传进去的-->
+    <insert id="saveUser" parameterType="bean.User">
+    <!--  insert into user(username)values(#{userName},#{必须与对应的bean中对应})
+      前面那个user()学过数据库应该都知道该怎么写-->
+
+      <!--配置插入操作后，获取插入数据的id keyColumn列名称对应表
+      有它存贮后id从null变成了数据库里存储的id
+      -->
+        <selectKey keyProperty="id" keyColumn="id" resultType="int" order="AFTER">
+            select  last_insert_id();
+        </selectKey>
+
+       insert into user(username)values(#{userName})
+     </insert>
+
+     <update id="updateUser" parameterType="bean.User">
+         update user set username=#{userName}where id=#{id}
+     </update>
+     <!--可以写int可以Integer-->
+    <delete id="deleteUser" parameterType="int">
+        <!--可以id 也可以写userId-->
+        /*一个参数时名字随便写*/
+        delete from user where id=#{id}
+    </delete>
+     <!--根据id查询用户    -->
+    <select id="findById" parameterType="int" resultType="bean.User">
+        select * from user where id=#{id}
+    </select>
+    <!-- 重点之一-->
+     <!--    模糊查询
+      如果这样写必须写成value，源码里规定
+      查询时就不需要加%了
+      select * from user where username like '%${value}%'‘
+      二者比较
+      这种使用Statement拼接Sql
+      下面那个用的时PrateStatement的？预处理方式
+      -->
+    <select id="findByName" parameterType="String" resultType="bean.User">
+         <!--  传进的参数须带% 此方式更好-->
+          select * from user where username like #{userName}
+
+    </select> 
+     <!--获取用户数    -->
+    <select id="count" resultType="int">
+        select count(*) from user
+    </select>
+    <!-- 重点之一-->
+    <!-- 对实体类对象包装起来查询-->
+    <select id="findUserByVo" parameterType="bean.QueryVo" resultType="bean.User">
+         select * from user where username like #{user.userName}
+    </select>
+</mapper>
